@@ -26,6 +26,10 @@ scrape_configs:
       'match[]':
          - '{__name__=~"^instance:.*"}'
 
+
+###### 去除 # 命令：sed 's/^#//g' ./test.yml |sed '/^$/d'
+
+
 ######  rules/node_rules.yml   # 下面的文件取消 # ，放到指定目录下
 #groups:
 #- name: node_rules
