@@ -1,0 +1,27 @@
+global:
+  scrape_interval:     15s 
+  evaluation_interval: 15s 
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+       - 192.168.20.174:9093
+       - 192.168.20.173:9093
+
+rule_files:
+  - "rules/node_rules.yml"
+  - "rules/*_alerts.yml"
+  # - "second_rules.yml"
+
+scrape_configs:
+  - job_name: 'node_workers'
+    file_sd_configs:
+      - files:
+        - 'targets/workers/*.json'
+        refresh_interval: 5m
+    honor_labels: true
+    metrics_path: /federate
+    params:
+      'match[]':
+         - '{__name__=~"^instance:.*"}'
