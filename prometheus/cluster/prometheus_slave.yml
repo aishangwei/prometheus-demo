@@ -1,0 +1,43 @@
+global:
+  external_labels:
+    worker: 0
+
+rule_files:
+  - "rules/node_rules.yml"
+
+scrape_configs:
+  - job_name: 'node'
+    file_sd_configs:
+      - files:
+        - targets/nodes/*.json
+        refresh_interval: 5m
+    relabel_configs:
+    - source_labels: [__address__]
+      modulus:       2
+      target_label:  __tmp_hash
+      action:        hashmod
+    - source_labels: [__tmp_hash]
+      regex:         ^0$
+      action:        keep
+      
+###### 去除 # 命令：sed -i 's/^#//g' ./test.yml |sed '/^$/d'
+
+######  rules/node_rules.yml   # 下面的文件取消 # ，放到指定目录下
+#groups:
+#- name: node_rules
+#  interval: 10s
+#  rules:
+#  - record: instance:node_cpu:avg_rate5m
+#    expr: 100 - avg (irate(node_cpu_seconds_total{job="node",mode="idle"}[5m])) by (instance) * 100
+#    labels:
+#      metric_type: aggregation
+
+
+######  targets/nodes/nodes.json  # 下面的文件文件取消 # ，放到指定目录下
+#[{
+#  "targets": [
+#    "192.168.20.172:9100",
+#    "192.168.20.173:9100",
+#    "192.168.20.174:9100"
+#  ]
+#}]
