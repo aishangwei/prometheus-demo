@@ -4,15 +4,6 @@ global:
   external_labels:
     worker: 1
 
-alerting:
-  alertmanagers:
-  - dns_sd_configs:
-    - names: ['_alertmanager._tcp.xiodi.cn']
-
-rule_files:
-  - "rules/*_rules.yml"
-  - "rules/*_alertes.yml"
-
 scrape_configs:
   - job_name: 'prometheus'
     dns_sd_configs:
