@@ -4,21 +4,17 @@ global:
 
 alerting:
   alertmanagers:
-  - static_configs:
-    - targets:
-       - 192.168.20.174:9093
-       - 192.168.20.173:9093
+  - dns_sd_configs:
+    - names: ['_alertmanager._tcp.xiodi.cn']
 
 rule_files:
-  - "rules/node_rules.yml"
-  - "rules/*_alerts.yml"
-  # - "second_rules.yml"
+  - "rules/*_rules.yml"
+  - "rules/*_alertes.yml"
 
 scrape_configs:
   - job_name: 'node_workers'
-    file_sd_configs:
-      - files:
-        - 'targets/workers/*.json'
+    dns_sd_configs:
+      - names: ['_prometheus._tcp.xiodi.cn']
         refresh_interval: 5m
     honor_labels: true
     metrics_path: /federate
@@ -26,75 +22,6 @@ scrape_configs:
       'match[]':
          - '{__name__=~"^instance:.*"}'
 
-
-###### 去除 # 命令：sed -i 's/^#//g' ./test.yml |sed '/^$/d'
-
-
-######  rules/node_rules.yml   # 下面的文件取消 # ，放到指定目录下
-#groups:
-#- name: node_rules
-#  interval: 10s
-#  rules:
-#  - record: instance:node_cpu:avg_rate5m
-#    expr: 100 - avg (irate(node_cpu_seconds_total{job="node",mode="idle"}[5m])) by (instance) * 100
-#    labels:
-#      metric_type: aggregation
-
-
-###### rules/node_alerts.yml  # 下面的文件取消 # ，放到指定目录下
-#groups:
-#- name: node_alerts
-#  rules:
-#  - alert: HighNodeCPU
-#    expr: instance:node_cpu:avg_rate5m > 4
-#    for: 2m
-#    labels:
-#      severity: warning
-#    annotations:
-#      summary: High Node CPU for 1 hour
-#      console: Thank you Test
-#  - alert: DiskWillFillIn4Hours
-#    expr: predict_linear(node_filesystem_free_bytes{mountpoint="/"}[1h], 4*3600) < 0
-#    for: 5m
-#    labels:
-#      severity: critical
-#    annotations:
-#      summary: Disk on {{ $labels.instance }} will fill in approximately  4 hours.
-#  - alert: InstanceDown
-#    expr: up{job="node"} == 0
-#    for: 1m
-#    labels:
-#      severity: critical
-#    annotations:
-#      summary: Host {{ $labels.instance }} of {{ $labels.job }} is Down!
-#  - alert: NodeServiceDown
-#    expr: node_systemd_unit_state{state="active"} != 1
-#    for: 60s
-#    labels:
-#      severity: critical
-#    annotations:
-#      summary: Service {{ $labels.name }} on {{ $labels.instance }} is no longer active!
-#      description: sddgsd - " 挨踢的，您的服务挂了？"
-
-
-######  targets/workers/worker.json  # 下面的文件文件取消 # ，放到指定目录下
-#[{
-#  "targets": [
-#    "192.168.20.172:9090",
-#    "192.168.20.173:9090"
-#  ]
-#}]
-
-
-
-
-
-
-
-
-
-
-
-
+# match是用来匹配，需要显示哪些指标，如需要显示 node开头的指标，- '{__name__=~"^node.*"}'
 
 
