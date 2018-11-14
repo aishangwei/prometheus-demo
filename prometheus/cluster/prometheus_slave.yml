@@ -2,7 +2,7 @@ global:
   scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
   external_labels:
-    worker: 0
+    worker: 1
 
 alerting:
   alertmanagers:
@@ -18,12 +18,12 @@ scrape_configs:
     dns_sd_configs:
       - names: ['_prometheus._tcp.xiodi.cn']
     relabel_configs:
-    - source_label: [__address__]
-      modules: 2
+    - source_labels: [__address__]
+      modulus: 2
       target_label: __tmp_hash
       action: hashmod
-    - souce_label: [__tmp_hash]
-      regex: ^0$
+    - source_labels: [__tmp_hash]
+      regex: ^1$
       action: keep
     
   - job_name: 'node'
@@ -32,12 +32,12 @@ scrape_configs:
         - targets/nodes/*.json
         refresh_interval: 1m
     relabel_configs:
-    - source_label: [__address__]
-      modules: 2
+    - source_labels: [__address__]
+      modulus: 2
       target_label: __tmp_hash
       action: hashmod
-    - souce_label: [__tmp_hash]
-      regex: ^0$
+    - source_labels: [__tmp_hash]
+      regex: ^1$
       action: keep
       
   - job_name: 'docker'
@@ -46,22 +46,22 @@ scrape_configs:
         - targets/docker/*.json
         refresh_interval: 2m
     relabel_configs:
-    - source_label: [__address__]
-      modules: 2
+    - source_labels: [__address__]
+      modulus: 2
       target_label: __tmp_hash
       action: hashmod
-    - souce_label: [__tmp_hash]
-      regex: ^0$
+    - source_labels: [__tmp_hash]
+      regex: ^1$
       action: keep
       
   - job_name: 'alertmanager'
     dns_sd_configs:
       - names: ['_alertmanager._tcp.xiodi.cn']
     relabel_configs:
-    - source_label: [__address__]
-      modules: 2
+    - source_labels: [__address__]
+      modulus: 2
       target_label: __tmp_hash
       action: hashmod
-    - souce_label: [__tmp_hash]
-      regex: ^0$
+    - source_labels: [__tmp_hash]
+      regex: ^1$
       action: keep
