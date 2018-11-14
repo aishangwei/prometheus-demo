@@ -12,8 +12,9 @@ rule_files:
 
 scrape_configs:
   - job_name: 'node_workers'
-    dns_sd_configs:
-      - names: ['_prometheus._tcp.xiodi.cn']
+    file_sd_configs:
+      - files:
+        - 'targets/workers/*.json'
         refresh_interval: 5m
     honor_labels: true
     metrics_path: /federate
