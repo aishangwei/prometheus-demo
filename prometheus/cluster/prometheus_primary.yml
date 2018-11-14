@@ -8,7 +8,6 @@ alerting:
     - names: ['_alertmanager._tcp.xiodi.cn']
 
 rule_files:
-  - "rules/*_rules.yml"
   - "rules/*_alertes.yml"
 
 scrape_configs:
